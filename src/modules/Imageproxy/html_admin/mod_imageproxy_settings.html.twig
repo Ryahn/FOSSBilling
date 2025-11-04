@@ -122,8 +122,9 @@
         {% set max_duration_seconds = config.max_duration_seconds|default(10) %}
         {% set whitelisted_hosts = config.whitelisted_hosts|default('') %}
 
-        <form method="post" action="{{ 'api/admin/imageproxy/update_config' | link }}" class="api-form" data-api-msg="Settings updated successfully">
+        <form method="post" action="{{ 'api/admin/extension/config_save' | link }}" class="api-form" data-api-msg="Settings updated successfully">
             <input type="hidden" name="CSRFToken" value="{{ CSRFToken }}"/>
+            <input type="hidden" name="ext" value="mod_imageproxy">
             
             <div class="row g-3 mb-3">
                 <div class="col-md-4">

@@ -20,61 +20,6 @@ namespace Box\Mod\Imageproxy\Api;
 class Admin extends \Api_Abstract
 {
     /**
-     * Update module configuration settings.
-     *
-     * @param array<string, mixed> $data Configuration data containing:
-     *                                   - max_size_mb: Maximum image size in MB (1-50)
-     *                                   - timeout_seconds: Request timeout in seconds (1-30)
-     *                                   - max_duration_seconds: Maximum request duration in seconds (1-60)
-     *                                   - whitelisted_hosts: Newline-separated list of hosts to exclude from proxying
-     *
-     * @return bool True on success
-     *
-     * @throws \FOSSBilling\InformationException If parameters are invalid or out of range
-     */
-    public function update_config($data): bool
-    {
-        $max_size_mb = $data['max_size_mb'] ?? 5;
-        $timeout_seconds = $data['timeout_seconds'] ?? 5;
-        $max_duration_seconds = $data['max_duration_seconds'] ?? 10;
-        $whitelisted_hosts = $data['whitelisted_hosts'] ?? '';
-
-        // Validate inputs
-        if ($max_size_mb < 1 || $max_size_mb > 50) {
-            throw new \FOSSBilling\InformationException('Max size must be between 1 and 50 MB');
-        }
-
-        if ($timeout_seconds < 1 || $timeout_seconds > 30) {
-            throw new \FOSSBilling\InformationException('Timeout must be between 1 and 30 seconds');
-        }
-
-        if ($max_duration_seconds < 1 || $max_duration_seconds > 60) {
-            throw new \FOSSBilling\InformationException('Max duration must be between 1 and 60 seconds');
-        }
-
-        if ($max_duration_seconds < $timeout_seconds) {
-            throw new \FOSSBilling\InformationException('Max duration must be greater than or equal to timeout');
-        }
-
-        // Clean up whitelisted hosts - normalize line endings and trim
-        $whitelisted_hosts = str_replace(["\r\n", "\r"], "\n", trim($whitelisted_hosts));
-
-        $config = [
-            'ext' => 'mod_imageproxy',
-            'max_size_mb' => (int) $max_size_mb,
-            'timeout_seconds' => (int) $timeout_seconds,
-            'max_duration_seconds' => (int) $max_duration_seconds,
-            'whitelisted_hosts' => $whitelisted_hosts,
-        ];
-
-        $this->di['mod_service']('extension')->setConfig($config);
-
-        $this->di['logger']->info('Updated Imageproxy module settings');
-
-        return true;
-    }
-
-    /**
      * Migrate all existing ticket messages to use proxified image URLs.
      * This is a one-time operation to retroactively apply image proxy to old tickets.
      *
