@@ -23,6 +23,37 @@ Access settings at: **Extensions → Image Proxy → Settings** (or `/admin/exte
 - Maximum image size (1-50 MB, default: 5 MB)
 - Connection timeout (1-30 seconds, default: 5)
 - Maximum duration (1-60 seconds, default: 10)
+- Whitelisted hosts (optional, newline-separated list)
+
+### Whitelisted Hosts
+
+You can configure specific hosts that should be **excluded** from proxying. Images from these hosts will remain as their original URLs and won't be proxied through your server.
+
+**Use cases:**
+- Trusted image hosting services (e.g., `imgur.com`, `picsum.photos`)
+- Your own CDN or image server
+- Hosts that require direct access for some reason
+
+**Configuration:**
+Enter one hostname per line in the textarea. For example:
+```
+imgur.com
+i.imgur.com
+picsum.photos
+```
+
+**Wildcard support:**
+You can use wildcards to match all subdomains:
+```
+*.imgur.com
+```
+This will match `imgur.com`, `i.imgur.com`, `cdn.imgur.com`, etc.
+
+**Default behavior:**
+If the whitelist is **empty**, all remote images will be proxied (default behavior).
+
+**Case-insensitive:**
+Host matching is case-insensitive, so `imgur.com` matches `IMGUR.COM` and `Imgur.com`.
 
 ## How It Works
 

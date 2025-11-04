@@ -120,6 +120,7 @@
         {% set max_size_mb = config.max_size_mb|default(5) %}
         {% set timeout_seconds = config.timeout_seconds|default(5) %}
         {% set max_duration_seconds = config.max_duration_seconds|default(10) %}
+        {% set whitelisted_hosts = config.whitelisted_hosts|default('') %}
 
         <form method="post" action="{{ 'api/admin/imageproxy/update_config' | link }}" class="api-form" data-api-msg="Settings updated successfully">
             <input type="hidden" name="CSRFToken" value="{{ CSRFToken }}"/>
@@ -171,6 +172,22 @@
                            max="60" 
                            required>
                     <div class="form-text">Maximum time allowed for the entire request (must be ≥ connection timeout).</div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="whitelisted_hosts">
+                    Whitelisted Hosts
+                    <span class="text-muted">(optional)</span>
+                </label>
+                <textarea class="form-control" 
+                          id="whitelisted_hosts" 
+                          name="whitelisted_hosts" 
+                          rows="5" 
+                          placeholder="imgur.com&#10;i.imgur.com&#10;picsum.photos">{{ whitelisted_hosts }}</textarea>
+                <div class="form-text">
+                    Images from these hosts will NOT be proxied. Enter one host per line. 
+                    If empty, all images will be proxied. Examples: <code>imgur.com</code>, <code>i.imgur.com</code>, <code>*.imgur.com</code> (wildcard for all subdomains)
                 </div>
             </div>
 

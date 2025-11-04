@@ -193,7 +193,7 @@ class Service implements \FOSSBilling\InjectionAwareInterface
      *
      * @param string $url The original image URL
      *
-     * @return string The proxied URL or original if not http(s)
+     * @return string The proxied URL or original if not http(s) or whitelisted
      */
     protected function makeProxyUrl(string $url): string
     {
@@ -204,6 +204,11 @@ class Service implements \FOSSBilling\InjectionAwareInterface
 
         // Skip if already proxified (prevents double-proxification)
         if (str_contains($url, '/imageproxy/image')) {
+            return $url;
+        }
+
+        // Skip if host is whitelisted
+        if ($this->isHostWhitelisted($url)) {
             return $url;
         }
 
@@ -225,6 +230,65 @@ class Service implements \FOSSBilling\InjectionAwareInterface
     protected function replaceWithProxy(string $fullTag, string $url): string
     {
         return str_replace($url, $this->makeProxyUrl($url), $fullTag);
+    }
+
+    /**
+     * Checks if a given URL's host is in the whitelist.
+     * Whitelisted hosts are not proxied and remain as original URLs.
+     *
+     * @param string $url The URL to check
+     *
+     * @return bool True if the host is whitelisted, false otherwise
+     */
+    protected function isHostWhitelisted(string $url): bool
+    {
+        // Get configuration
+        $config = $this->di['mod_config']('imageproxy');
+        $whitelistConfig = $config['whitelisted_hosts'] ?? '';
+
+        // If whitelist is empty, nothing is whitelisted (proxy everything)
+        if (empty(trim($whitelistConfig))) {
+            return false;
+        }
+
+        // Parse whitelist - split by newlines, trim, and remove empty entries
+        $whitelist = array_filter(
+            array_map('trim', explode("\n", $whitelistConfig)),
+            fn ($host) => !empty($host)
+        );
+
+        if (empty($whitelist)) {
+            return false;
+        }
+
+        // Extract hostname from URL
+        $host = parse_url($url, PHP_URL_HOST);
+        if (!$host) {
+            return false;
+        }
+
+        // Normalize to lowercase for case-insensitive comparison
+        $host = strtolower($host);
+
+        // Check against whitelist entries
+        foreach ($whitelist as $whitelistedHost) {
+            $whitelistedHost = strtolower(trim($whitelistedHost));
+
+            // Exact match
+            if ($host === $whitelistedHost) {
+                return true;
+            }
+
+            // Wildcard support: *.example.com matches any.subdomain.example.com
+            if (str_starts_with($whitelistedHost, '*.')) {
+                $domain = substr($whitelistedHost, 2); // Remove *.
+                if ($host === $domain || str_ends_with($host, '.' . $domain)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

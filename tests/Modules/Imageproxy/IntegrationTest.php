@@ -93,6 +93,66 @@ final class IntegrationTest extends TestCase
     }
 
     /**
+     * Test that whitelisted hosts can be configured.
+     */
+    public function testWhitelistConfiguration(): void
+    {
+        // Test updating configuration with whitelist
+        $result = Request::makeRequest('admin/imageproxy/update_config', [
+            'max_size_mb' => 5,
+            'timeout_seconds' => 5,
+            'max_duration_seconds' => 10,
+            'whitelisted_hosts' => "imgur.com\npicsum.photos\nexample.com",
+        ]);
+
+        $this->assertTrue($result->wasSuccessful(), $result->generatePHPUnitMessage());
+        $this->assertTrue($result->getResult());
+
+        // Verify config was saved
+        $configResult = Request::makeRequest('admin/extension/config_get', [
+            'ext' => 'mod_imageproxy',
+        ]);
+
+        $this->assertTrue($configResult->wasSuccessful(), $configResult->generatePHPUnitMessage());
+        $config = $configResult->getResult();
+        $this->assertArrayHasKey('whitelisted_hosts', $config);
+        $this->assertEquals("imgur.com\npicsum.photos\nexample.com", $config['whitelisted_hosts']);
+
+        // Reset whitelist
+        Request::makeRequest('admin/imageproxy/update_config', [
+            'max_size_mb' => 5,
+            'timeout_seconds' => 5,
+            'max_duration_seconds' => 10,
+            'whitelisted_hosts' => '',
+        ]);
+    }
+
+    /**
+     * Test that empty whitelist is handled correctly.
+     */
+    public function testEmptyWhitelist(): void
+    {
+        $result = Request::makeRequest('admin/imageproxy/update_config', [
+            'max_size_mb' => 5,
+            'timeout_seconds' => 5,
+            'max_duration_seconds' => 10,
+            'whitelisted_hosts' => '',
+        ]);
+
+        $this->assertTrue($result->wasSuccessful(), $result->generatePHPUnitMessage());
+
+        // Verify empty whitelist was saved
+        $configResult = Request::makeRequest('admin/extension/config_get', [
+            'ext' => 'mod_imageproxy',
+        ]);
+
+        $this->assertTrue($configResult->wasSuccessful(), $configResult->generatePHPUnitMessage());
+        $config = $configResult->getResult();
+        $this->assertArrayHasKey('whitelisted_hosts', $config);
+        $this->assertEquals('', $config['whitelisted_hosts']);
+    }
+
+    /**
      * Test migration of existing tickets to use proxified URLs.
      */
     public function testMigrateExistingTickets(): void

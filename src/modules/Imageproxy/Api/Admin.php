@@ -26,6 +26,7 @@ class Admin extends \Api_Abstract
      *                                    - max_size_mb: Maximum image size in MB (1-50)
      *                                    - timeout_seconds: Request timeout in seconds (1-30)
      *                                    - max_duration_seconds: Maximum request duration in seconds (1-60)
+     *                                    - whitelisted_hosts: Newline-separated list of hosts to exclude from proxying
      *
      * @return bool True on success
      *
@@ -36,6 +37,7 @@ class Admin extends \Api_Abstract
         $max_size_mb = $data['max_size_mb'] ?? 5;
         $timeout_seconds = $data['timeout_seconds'] ?? 5;
         $max_duration_seconds = $data['max_duration_seconds'] ?? 10;
+        $whitelisted_hosts = $data['whitelisted_hosts'] ?? '';
 
         // Validate inputs
         if ($max_size_mb < 1 || $max_size_mb > 50) {
@@ -54,11 +56,15 @@ class Admin extends \Api_Abstract
             throw new \FOSSBilling\InformationException('Max duration must be greater than or equal to timeout');
         }
 
+        // Clean up whitelisted hosts - normalize line endings and trim
+        $whitelisted_hosts = str_replace(["\r\n", "\r"], "\n", trim($whitelisted_hosts));
+
         $config = [
             'ext' => 'mod_imageproxy',
             'max_size_mb' => (int) $max_size_mb,
             'timeout_seconds' => (int) $timeout_seconds,
             'max_duration_seconds' => (int) $max_duration_seconds,
+            'whitelisted_hosts' => $whitelisted_hosts,
         ];
 
         $this->di['mod_service']('extension')->setConfig($config);
