@@ -81,4 +81,3 @@ class MigrateExisting extends Command implements \FOSSBilling\InjectionAwareInte
         return Command::SUCCESS;
     }
 }
-

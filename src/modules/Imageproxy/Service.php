@@ -342,7 +342,7 @@ class Service implements \FOSSBilling\InjectionAwareInterface
             }
 
             return ['content_type' => $contentType, 'body' => $body];
-        } catch (\Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface |
+        } catch (\Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface|
                  \Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface $e) {
                      throw new \FOSSBilling\InformationException('Unable to fetch image: ' . $e->getMessage());
                  }
@@ -407,32 +407,32 @@ class Service implements \FOSSBilling\InjectionAwareInterface
         // Process regular ticket messages
         $messages = $this->di['db']->find('SupportTicketMessage');
         foreach ($messages as $msg) {
-            $stats['processed']++;
+            ++$stats['processed'];
             $original = $msg->content;
             $proxified = $this->proxifyImages($original);
 
             if ($proxified !== $original) {
-                $stats['images_found']++;
+                ++$stats['images_found'];
                 $msg->content = $proxified;
                 $msg->updated_at = date('Y-m-d H:i:s');
                 $this->di['db']->store($msg);
-                $stats['updated']++;
+                ++$stats['updated'];
             }
         }
 
         // Process public ticket messages
         $publicMessages = $this->di['db']->find('SupportPTicketMessage');
         foreach ($publicMessages as $msg) {
-            $stats['processed']++;
+            ++$stats['processed'];
             $original = $msg->content;
             $proxified = $this->proxifyImages($original);
 
             if ($proxified !== $original) {
-                $stats['images_found']++;
+                ++$stats['images_found'];
                 $msg->content = $proxified;
                 $msg->updated_at = date('Y-m-d H:i:s');
                 $this->di['db']->store($msg);
-                $stats['updated']++;
+                ++$stats['updated'];
             }
         }
 
@@ -457,7 +457,7 @@ class Service implements \FOSSBilling\InjectionAwareInterface
         // Process regular ticket messages
         $messages = $this->di['db']->find('SupportTicketMessage');
         foreach ($messages as $msg) {
-            $stats['processed']++;
+            ++$stats['processed'];
             $original = $msg->content;
             $reverted = $this->revertProxifiedContent($original);
 
@@ -465,14 +465,14 @@ class Service implements \FOSSBilling\InjectionAwareInterface
                 $msg->content = $reverted;
                 $msg->updated_at = date('Y-m-d H:i:s');
                 $this->di['db']->store($msg);
-                $stats['reverted']++;
+                ++$stats['reverted'];
             }
         }
 
         // Process public ticket messages
         $publicMessages = $this->di['db']->find('SupportPTicketMessage');
         foreach ($publicMessages as $msg) {
-            $stats['processed']++;
+            ++$stats['processed'];
             $original = $msg->content;
             $reverted = $this->revertProxifiedContent($original);
 
@@ -480,7 +480,7 @@ class Service implements \FOSSBilling\InjectionAwareInterface
                 $msg->content = $reverted;
                 $msg->updated_at = date('Y-m-d H:i:s');
                 $this->di['db']->store($msg);
-                $stats['reverted']++;
+                ++$stats['reverted'];
             }
         }
 
@@ -519,8 +519,6 @@ class Service implements \FOSSBilling\InjectionAwareInterface
     /**
      * Called when module is uninstalled.
      * Reverts all proxified URLs back to originals and cleans up configuration.
-     *
-     * @return void
      */
     public function uninstall(): void
     {

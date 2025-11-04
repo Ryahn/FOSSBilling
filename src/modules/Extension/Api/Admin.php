@@ -192,9 +192,7 @@ class Admin extends \Api_Abstract
 
     /**
      * Uninstall a deactivated extension, remove its files from the disk and call $extension->uninstall() to trigger database cleanup.
-     * 
-     * @return bool
-     * 
+     *
      * @throws \FOSSBilling\Exception
      */
     public function uninstall($data): bool
@@ -204,7 +202,7 @@ class Admin extends \Api_Abstract
             'type' => 'Extension type was not passed',
         ];
         $this->di['validator']->checkRequiredParamsForArray($required, $data);
-        
+
         $this->di['events_manager']->fire(['event' => 'onBeforeAdminUninstallExtension', 'params' => ['type' => $data['type'], 'id' => $data['id']]]);
 
         $this->getService()->uninstall($data['type'], $data['id']);

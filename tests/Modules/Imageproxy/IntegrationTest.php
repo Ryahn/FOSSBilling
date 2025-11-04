@@ -188,5 +188,3 @@ final class IntegrationTest extends TestCase
         $this->assertGreaterThanOrEqual(0, $stats['reverted']);
     }
 }
-
-

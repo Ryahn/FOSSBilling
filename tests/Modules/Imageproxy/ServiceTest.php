@@ -36,7 +36,9 @@ final class ServiceTest extends TestCase
             return [];
         });
 
-        $urlMock = $this->createMock(\stdClass::class);
+        $urlMock = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['link'])
+            ->getMock();
         $urlMock->method('link')->willReturn('http://localhost/imageproxy/image?u=encoded');
         $this->di['url'] = $urlMock;
 
@@ -62,7 +64,9 @@ final class ServiceTest extends TestCase
             return [];
         });
 
-        $urlMock = $this->createMock(\stdClass::class);
+        $urlMock = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['link'])
+            ->getMock();
         $urlMock->method('link')->willReturn('http://localhost/imageproxy/image?u=encoded');
         $this->di['url'] = $urlMock;
 
@@ -90,7 +94,9 @@ final class ServiceTest extends TestCase
             return [];
         });
 
-        $urlMock = $this->createMock(\stdClass::class);
+        $urlMock = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['link'])
+            ->getMock();
         $urlMock->method('link')->willReturn('http://localhost/imageproxy/image?u=encoded');
         $this->di['url'] = $urlMock;
 
@@ -111,13 +117,15 @@ final class ServiceTest extends TestCase
     {
         $this->di['mod_config'] = $this->di->protect(function ($modName) {
             if ($modName === 'imageproxy') {
-                return ['whitelisted_hosts' => "*.imgur.com"];
+                return ['whitelisted_hosts' => '*.imgur.com'];
             }
 
             return [];
         });
 
-        $urlMock = $this->createMock(\stdClass::class);
+        $urlMock = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['link'])
+            ->getMock();
         $urlMock->method('link')->willReturn('http://localhost/imageproxy/image?u=encoded');
         $this->di['url'] = $urlMock;
 
@@ -139,13 +147,15 @@ final class ServiceTest extends TestCase
     {
         $this->di['mod_config'] = $this->di->protect(function ($modName) {
             if ($modName === 'imageproxy') {
-                return ['whitelisted_hosts' => "*.imgur.com"];
+                return ['whitelisted_hosts' => '*.imgur.com'];
             }
 
             return [];
         });
 
-        $urlMock = $this->createMock(\stdClass::class);
+        $urlMock = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['link'])
+            ->getMock();
         $urlMock->method('link')->willReturn('http://localhost/imageproxy/image?u=encoded');
         $this->di['url'] = $urlMock;
 
@@ -173,7 +183,9 @@ final class ServiceTest extends TestCase
             return [];
         });
 
-        $urlMock = $this->createMock(\stdClass::class);
+        $urlMock = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['link'])
+            ->getMock();
         $urlMock->method('link')->willReturn('http://localhost/imageproxy/image?u=encoded');
         $this->di['url'] = $urlMock;
 
@@ -201,7 +213,9 @@ final class ServiceTest extends TestCase
             return [];
         });
 
-        $urlMock = $this->createMock(\stdClass::class);
+        $urlMock = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['link'])
+            ->getMock();
         $urlMock->method('link')->willReturn('http://localhost/imageproxy/image?u=encoded');
         $this->di['url'] = $urlMock;
 
@@ -229,7 +243,9 @@ final class ServiceTest extends TestCase
             return [];
         });
 
-        $urlMock = $this->createMock(\stdClass::class);
+        $urlMock = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['link'])
+            ->getMock();
         $urlMock->method('link')->willReturn('http://localhost/imageproxy/image?u=encoded');
         $this->di['url'] = $urlMock;
 
@@ -260,7 +276,9 @@ final class ServiceTest extends TestCase
             return [];
         });
 
-        $urlMock = $this->createMock(\stdClass::class);
+        $urlMock = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['link'])
+            ->getMock();
         $urlMock->method('link')->willReturn('http://localhost/imageproxy/image?u=encoded');
         $this->di['url'] = $urlMock;
 
@@ -288,7 +306,9 @@ final class ServiceTest extends TestCase
             return [];
         });
 
-        $urlMock = $this->createMock(\stdClass::class);
+        $urlMock = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['link'])
+            ->getMock();
         $urlMock->method('link')->willReturn('http://localhost/imageproxy/image?u=encoded');
         $this->di['url'] = $urlMock;
 

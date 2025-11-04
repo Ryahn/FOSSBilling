@@ -23,10 +23,10 @@ class Admin extends \Api_Abstract
      * Update module configuration settings.
      *
      * @param array<string, mixed> $data Configuration data containing:
-     *                                    - max_size_mb: Maximum image size in MB (1-50)
-     *                                    - timeout_seconds: Request timeout in seconds (1-30)
-     *                                    - max_duration_seconds: Maximum request duration in seconds (1-60)
-     *                                    - whitelisted_hosts: Newline-separated list of hosts to exclude from proxying
+     *                                   - max_size_mb: Maximum image size in MB (1-50)
+     *                                   - timeout_seconds: Request timeout in seconds (1-30)
+     *                                   - max_duration_seconds: Maximum request duration in seconds (1-60)
+     *                                   - whitelisted_hosts: Newline-separated list of hosts to exclude from proxying
      *
      * @return bool True on success
      *

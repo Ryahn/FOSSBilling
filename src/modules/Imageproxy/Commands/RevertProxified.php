@@ -81,4 +81,3 @@ class RevertProxified extends Command implements \FOSSBilling\InjectionAwareInte
         return Command::SUCCESS;
     }
 }
-
